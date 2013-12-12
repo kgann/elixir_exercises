@@ -8,11 +8,11 @@ defmodule Functions7 do
   def all?(list, fun // &(&1)), do: _all?(list, fun)
   def each(list, fun), do: _each(list, fun)
   def filter(list, fun), do: _filter([], list, fun)
+  def split(list, count), do: _split([], list, count)
 
   # Private
   defp _sum([]), do: 0
-  defp _sum([head | []]), do: head
-  defp _sum([head, second | tail]), do: head + second + sum(tail)
+  defp _sum([head | tail]), do: head + _sum(tail)
 
   # map_then
   #  - map over a list with map_fn
@@ -48,5 +48,12 @@ defmodule Functions7 do
     else
       filtered |> _filter(tail, fun)
     end
+  end
+
+  defp _split(first, list, 0), do: { first, list }
+  defp _split(first, [], _count), do: { first, [] }
+  defp _split(first, [head | tail], count), do: first ++ [head] |> _split(tail, count - 1)
+  defp _split(first, list, count) when count < 0 do
+    _split(first, list, max([length(list) - abs(count), 0]))
   end
 end
